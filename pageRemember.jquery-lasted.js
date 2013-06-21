@@ -12,26 +12,25 @@
 ;
 var PageRemember =
 {
+    defaults: {
+        data: {},
+        save: {
+            scroll: true,
+            duration: true,
+            referer: true,
+            goto: true
+        },
+        cookie: {
+            cookie: 'pageremember',
+            duration: 1800 // In second
+        }
+    },
     _workspace: {
         scroll: '_prscroll',
         duration: '_prduration',
         referer: '_prreferer',
-        output: '_proutput',
+        goto: '_prgoto',
         dom: '_prdom'
-    },
-    defaults : {
-        data: {},
-        save : {
-            scroll: true,
-            duration: true,
-            referer: true,
-            output: true
-        },
-        cookie : {
-            name: 'pageremember',
-            duration: 300, // In second
-            path: '/'
-        }
     },
     add: function (name, data)
     {
@@ -100,8 +99,8 @@ var PageRemember =
         switch(e.type)
         {
             case 'click':
-                if (this.defaults.save.output) {
-                    this.defaults.data[this._workspace.output] =
+                if (this.defaults.save.goto) {
+                    this.defaults.data[this._workspace.goto] =
                         ('undefined' != typeof e.currentHref ? e.currentHref : e.target.href);
                 }
                 break;
@@ -146,7 +145,6 @@ var PageRemember =
     {
         var name = this.defaults.cookie.name + '=';
         var cookies = document.cookie.split(';');
-console.log(cookies);
         for(var i = 0; i < cookies.length; i++) {
             var c = cookies[i];
             while (' ' == c.charAt(0)) {
@@ -164,8 +162,8 @@ console.log(cookies);
             duration.setTime(duration.getTime() + this.defaults.cookie.duration * 1000);
 
         document.cookie =
-            this.defaults.cookie.name + '=' +JSON.stringify(this.defaults.data) +
-            '; expires=' + duration.toGMTString() + '; path=' + this.defaults.cookie.path;
+            this.defaults.cookie.name + '=' + JSON.stringify(this.defaults.data) +
+            '; expires=' + duration.toGMTString() + '; path=' + window.location.pathname;
     }
 };
 
